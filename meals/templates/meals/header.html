@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Meal Rating Site</title>
+</head>
+<body>
+    <div>
+        <nav class="mt-5 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
+            <div><a class="underline text-blue-600" href="/">Home</a></div>
+            <div><a class="underline text-blue-600" href="/category/morning_date">Morning Meals</a></div>
+            <div><a class="underline text-blue-600" href="/category/afternoon_date">Afternoon Meals</a></div>
+            <div><a class="underline text-blue-600" href="/category/evening_date">Evening Meals</a></div>
+            <div><a class="underline text-blue-600" href="/category/recent_date">Recently Added</a></div>
+            <div><a class="underline text-blue-600" href="/category/topRated_date">Top Rated</a></div>
+        </nav>
+        
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

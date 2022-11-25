@@ -1,0 +1,27 @@
+{% extends 'meals/header.html' %}
+{% block content %}
+
+<div class="text-center mt-5 text-2xl">
+    <h1>{{ title }}</h1>
+</div>
+<div class="flex justify-end">
+    <div class="mr-28 text-center">
+        <p class="mb-1">Sort by:</p>
+        <p><a href="/category/{{ categoryName }}_rating" class="mx-3 text-blue-600 underline">Rating</a>
+            <a href="/category/{{ categoryName }}_country" class="mx-3 text-blue-600 underline">Country</a>
+            <a href="/category/{{ categoryName }}_date" class="mx-3 text-blue-600 underline">Date</a>
+        </p>
+    </div>
+</div>
+<div>
+    {% for meal in mealList %}
+    <a href="/detail_{{ meal.id }}">
+        <div class="flex items-center w-3/5 mx-auto my-5 border-2">
+            <img src={{ meal.imgUrl }} width="30%" class="mr-3">
+            <p>{{ meal.name }} ({{ meal.countryOfOrigin }}) Avg Score: {{ meal.avgRating }}, Votes: {{ meal.numOfVotes }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}
