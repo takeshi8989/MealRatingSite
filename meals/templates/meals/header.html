@@ -34,12 +34,16 @@
             </div>
         </div>
         <nav class="mt-16 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
-            <div><a class="underline text-blue-600" href="/">Home</a></div>
-            <div><a class="underline text-blue-600" href="/category/morning_date">Morning Meals</a></div>
-            <div><a class="underline text-blue-600" href="/category/afternoon_date">Afternoon Meals</a></div>
-            <div><a class="underline text-blue-600" href="/category/evening_date">Evening Meals</a></div>
-            <div><a class="underline text-blue-600" href="/category/recent_date">Recently Added</a></div>
-            <div><a class="underline text-blue-600" href="/category/topRated_date">Top Rated</a></div>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">vegetarian</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">spicy</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">healthy</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">seafood</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">morning</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">afternoon</button>
+            <button class="border border-blue-600 rounded p-2 text-blue-600">evening</button>
+            {% if user.is_authenticated %}
+            <button class="border border-green-600 rounded p-2 text-green-600">recommended</button>
+            {% endif %}
         </nav>
         
         {% block content %}{% endblock %}

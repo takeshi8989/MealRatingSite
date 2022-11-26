@@ -28,23 +28,10 @@ def home(request):
     return render(request, 'meals/index.html', context=ctx)
 
 
-def category(request, categoryName, sortBy):
-    categoryNameList = ['morning', 'afternoon', 'evening', 'recent', 'topRated']
-    titleList = ['Morning Meals', 'Afternoon Meals', 'Evening Meals', 'Recently Added', 'Top Rated']
-    sortTable = {'date': '-dateAdded', 'rating': '-avgRating', 'country': 'countryOfOrigin'}
-    titleIndex = categoryNameList.index(categoryName)
+def category(request):
     mealList = Meal.objects.all()
-    if 0 <= titleIndex and titleIndex <= 2:
-        mealList = mealList.filter(typicalMealTime=titleIndex+1).order_by(sortTable[sortBy])
-    elif titleIndex == 3:
-        mealList = mealList.order_by(sortTable['date'], sortTable[sortBy])
-    elif titleIndex == 4:
-        mealList = mealList.order_by(sortTable['rating'], sortTable[sortBy])
-
     categoryCxt = {
-        'title': titleList[titleIndex],
         'mealList': mealList,
-        'categoryName': categoryName,
     }
     if request.method == 'POST':
         name = request.POST['username']
