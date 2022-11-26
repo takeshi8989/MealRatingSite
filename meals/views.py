@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Meal, MealRating
+from django.contrib.auth import authenticate
 
 def home(request):
     morningMeals = Meal.objects.filter(typicalMealTime=1)[0:3]

@@ -9,7 +9,28 @@
 </head>
 <body>
     <div>
-        <nav class="mt-5 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
+        <h1 class="text-2xl text-center mt-10">Meal Recommender</h1>
+        <p class="text-center mt-3">
+            Select one or more buttons to narrow down your<br> search and register to see recommendations
+        </p>
+        <div class="absolute w-full flex justify-end">
+            <div class="absolute -top-24 right-10 flex flex-col items-center">
+                {% if user.is_authenticated %}
+                <p>Welcome, {{ user }}!</p>
+                <a href="{% url 'home' %}" class="underline text-blue-600">Home</a>
+                <a href="{% url 'home' %}" class="underline text-blue-600">See History</a>
+                <a href="{% url 'home' %}" class="underline text-blue-600">Add a Meal</a>
+                <a href="{% url 'home' %}" class="underline text-blue-600">Logout</a>
+                {% else %}
+                <p>Welcome, Anonymous!</p>
+                <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username">
+                <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password">
+                <button class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
+                <a href="#" class="underline text-blue-600">Register</a>
+                {% endif %}
+            </div>
+        </div>
+        <nav class="mt-16 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
             <div><a class="underline text-blue-600" href="/">Home</a></div>
             <div><a class="underline text-blue-600" href="/category/morning_date">Morning Meals</a></div>
             <div><a class="underline text-blue-600" href="/category/afternoon_date">Afternoon Meals</a></div>
