@@ -28,10 +28,17 @@ def home(request):
     return render(request, 'meals/index.html', context=ctx)
 
 
-def category(request):
+def category(request, sortBy):
     mealList = Meal.objects.all()
+    if sortBy == 'date':
+        mealList = mealList.order_by('-dateAdded')
+    if sortBy == 'rating':
+        mealList = mealList.order_by('-avgRating')
+    if sortBy == 'country':
+        mealList = mealList.order_by('countryOfOrigin')
     categoryCxt = {
         'mealList': mealList,
+        'sortBy': sortBy
     }
     if request.method == 'POST':
         name = request.POST['username']
