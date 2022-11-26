@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Meal, MealRating
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     morningMeals = Meal.objects.filter(typicalMealTime=1)[0:3]
@@ -44,6 +46,12 @@ def category(request, categoryName, sortBy):
         'mealList': mealList,
         'categoryName': categoryName,
     }
+    if request.method == 'POST':
+        name = request.POST['username']
+        pw = request.POST['password']
+        user = authenticate(username=name, password=pw)
+        if user:
+            login(request,user)
     return render(request, 'meals/category.html', context=categoryCxt)
 
 
@@ -59,3 +67,7 @@ def detail(request, mealId):
         meal.save()
         newRating.save()
     return render(request, 'meals/detail.html', context={'meal': meal})
+
+def log_out(request):
+    logout(request)
+    return render(request, 'meals/logout.html')

@@ -20,12 +20,15 @@
                 <a href="{% url 'home' %}" class="underline text-blue-600">Home</a>
                 <a href="{% url 'home' %}" class="underline text-blue-600">See History</a>
                 <a href="{% url 'home' %}" class="underline text-blue-600">Add a Meal</a>
-                <a href="{% url 'home' %}" class="underline text-blue-600">Logout</a>
+                <a href="{% url 'logout' %}" class="underline text-blue-600">Logout</a>
                 {% else %}
                 <p>Welcome, Anonymous!</p>
-                <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username">
-                <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password">
-                <button class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
+                <form method="POST" class="flex flex-col items-center">
+                    {% csrf_token %}
+                    <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username" name="username">
+                    <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password" name="password">
+                    <button type="submit" class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
+                </form>
                 <a href="#" class="underline text-blue-600">Register</a>
                 {% endif %}
             </div>
