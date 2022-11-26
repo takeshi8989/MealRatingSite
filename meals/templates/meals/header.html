@@ -1,3 +1,5 @@
+{% load my_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,9 +19,10 @@
             <div class="absolute -top-24 right-10 flex flex-col items-center">
                 {% if user.is_authenticated %}
                 <p>Welcome, {{ user }}!</p>
-                <a href="{% url 'home' %}" class="underline text-blue-600">Home</a>
-                <a href="{% url 'home' %}" class="underline text-blue-600">See History</a>
-                <a href="{% url 'home' %}" class="underline text-blue-600">Add a Meal</a>
+                <a href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date' %}" 
+                        class="underline text-blue-600">Home</a>
+                <a href="{% url 'home' 'tag1' 'date' %}" class="underline text-blue-600">See History</a>
+                <a href="{% url 'home' 'tag1' 'date' %}" class="underline text-blue-600">Add a Meal</a>
                 <a href="{% url 'logout' %}" class="underline text-blue-600">Logout</a>
                 {% else %}
                 <p>Welcome, Anonymous!</p>
@@ -34,15 +37,18 @@
             </div>
         </div>
         <nav class="mt-16 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
-            <button class="border border-blue-600 rounded p-2 text-blue-600">vegetarian</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">spicy</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">healthy</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">seafood</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">morning</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">afternoon</button>
-            <button class="border border-blue-600 rounded p-2 text-blue-600">evening</button>
+            {% for tagName in tagList %}
+                {% if tagName in tags %}
+                    <a class="border border-blue-600 rounded p-2 bg-blue-600 text-white"
+                    href="/home/tags_{{ tags|replace:tagName }}/sort_date">{{ tagName }}</a>
+                {% else %}
+                    <a class="border border-blue-600 rounded p-2 text-blue-600"
+                    href="/home/tags_{{ tags|add:tagName }}/sort_date">{{ tagName }}</a>
+                {% endif %}
+            {% endfor %}
+
             {% if user.is_authenticated %}
-            <button class="border border-green-600 rounded p-2 text-green-600">recommended</button>
+            <button class="border border-green-600 rounded p-2 text-green-600">Recommended</button>
             {% endif %}
         </nav>
         

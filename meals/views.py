@@ -1,13 +1,11 @@
 from django.shortcuts import render
-from .models import Meal, MealRating
+from .models import Meal, MealRating, Tag
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 
 def home(request):
-    morningMeals = Meal.objects.filter(typicalMealTime=1)[0:3]
-    afternoonMeals = Meal.objects.filter(typicalMealTime=2)[0:3]
-    eveningMeals = Meal.objects.filter(typicalMealTime=3)[0:3]
+    morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
+    afternoonMeals = Tag.objects.get(tagName='Afternoon').meal_set.all()[0:3]
+    eveningMeals = Tag.objects.get(tagName='Evening').meal_set.all()[0:3]
     recentMeals = Meal.objects.all().order_by('-dateAdded')[0:3]
     topRatedMeals = Meal.objects.all().order_by('-avgRating')[0:3]
     ctx = {
@@ -28,8 +26,15 @@ def home(request):
     return render(request, 'meals/index.html', context=ctx)
 
 
-def category(request, sortBy):
-    mealList = Meal.objects.all()
+def category(request, tags, sortBy):
+    tagList = ['Vegetarian', 'Spicy', 'Healthy', 'Seafood', 'Morning', 'Afternoon', 'Evening']
+    selectedTags = tags.split('+')
+    mealList = Meal.objects.none()
+    for i in range(0, len(selectedTags)):
+        if not selectedTags[i].__eq__('Recommended'):
+            if selectedTags[i] in tagList:
+                mealList = mealList | Tag.objects.get(tagName=selectedTags[i]).meal_set.all()
+    mealList = mealList.distinct()
     if sortBy == 'date':
         mealList = mealList.order_by('-dateAdded')
     if sortBy == 'rating':
@@ -38,7 +43,9 @@ def category(request, sortBy):
         mealList = mealList.order_by('countryOfOrigin')
     categoryCxt = {
         'mealList': mealList,
-        'sortBy': sortBy
+        'sortBy': sortBy,
+        'tags': tags,
+        'tagList': tagList
     }
     if request.method == 'POST':
         name = request.POST['username']

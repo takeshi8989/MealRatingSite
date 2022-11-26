@@ -15,35 +15,35 @@
         <div class="flex mt-10">
             <div class="w-8/12 flex justify-center">
                 <div class="w-1/5">
-                    <a href="category/morning_date" class="underline text-blue-600">Morning Foods</a>
+                    <a href="{% url 'home' 'date' %}" class="underline text-blue-600">Morning Foods</a>
                     {% for meal in morning %}
                         <p class="mt-2">{{ meal.name }}</p>
                         <a href="/detail_{{ meal.id }}"><img src={{ meal.imgUrl }} width="75%" height="auto"></a>
                     {% endfor %}
                 </div>
                 <div class="w-1/5">
-                    <a href="category/afternoon_date" class="underline text-blue-600">Afternoon Foods</a>
+                    <a href="{% url 'home' 'date' %}" class="underline text-blue-600">Afternoon Foods</a>
                     {% for meal in afternoon %}
                         <p class="mt-2">{{ meal.name }}</p>
                         <a href="/detail_{{ meal.id }}"><img src={{ meal.imgUrl }} width="75%" height="auto"></a>
                     {% endfor %}
                 </div>
                 <div class="w-1/5">
-                    <a href="category/evening_date" class="underline text-blue-600">Evening Foods</a>
+                    <a href="{% url 'home' 'date' %}" class="underline text-blue-600">Evening Foods</a>
                     {% for meal in evening %}
                         <p class="mt-2">{{ meal.name }}</p>
                         <a href="/detail_{{ meal.id }}"><img src={{ meal.imgUrl }} width="75%" height="auto"></a>
                     {% endfor %}
                 </div>
                 <div class="w-1/5">
-                    <a href="category/recent_date" class="underline text-blue-600">Recently Added</a>
+                    <a href="{% url 'home' 'date' %}" class="underline text-blue-600">Recently Added</a>
                     {% for meal in recent %}
                         <p class="mt-2">{{ meal.name }}</p>
                         <a href="/detail_{{ meal.id }}"><img src={{ meal.imgUrl }} width="75%" height="auto"></a>
                     {% endfor %}
                 </div>
                 <div class="w-1/5">
-                    <a href="category/topRated_date" class="underline text-blue-600">Top Rated</a>
+                    <a href="{% url 'home' 'date' %}" class="underline text-blue-600">Top Rated</a>
                     {% for meal in topRated %}
                         <p class="mt-2">{{ meal.name }}</p>
                         <a href="/detail_{{ meal.id }}"><img src={{ meal.imgUrl }} width="75%" height="auto"></a>
