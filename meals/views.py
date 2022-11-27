@@ -71,6 +71,8 @@ def detail(request, mealId):
         meal.numOfVotes += 1
         meal.save()
         newRating.save()
+        user = request.user
+        user.ratings.add(newRating)
     return render(request, 'meals/detail.html', context={'meal': meal})
 
 def log_out(request):
@@ -81,10 +83,7 @@ def register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+            user = form.save()
             login(request, user)
             return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
     else:
@@ -96,6 +95,7 @@ def addMeal(request):
     if request.method == 'POST':
         form = NewMealForm(request.POST)
         if form.is_valid():
+            user = request.user
             mealName = form.cleaned_data['name']
             mealUrl = form.cleaned_data['imgUrl']
             mealOrigin = form.cleaned_data['countryOfOrigin']
@@ -106,6 +106,8 @@ def addMeal(request):
             for tag in tags:
                 meal.tags.add(tag)
             meal.save()
+            user = request.user
+            user.meals.add(meal)
 
         return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
     else:
@@ -114,4 +116,7 @@ def addMeal(request):
 
 @login_required(login_url='/register')
 def history(request):
-    return render(request, 'meals/history.html')
+    user = request.user
+    meals = user.meals.all().order_by('-dateAdded')
+    ratings = user.ratings.all().order_by('-dateOfRating')
+    return render(request, 'meals/history.html', context={'meals': meals, 'ratings': ratings})
