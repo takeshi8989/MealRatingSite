@@ -12,45 +12,27 @@
 <body>
     <div>
         <h1 class="text-2xl text-center mt-10">Meal Recommender</h1>
-        <p class="text-center mt-3">
-            Select one or more buttons to narrow down your<br> search and register to see recommendations
-        </p>
         <div class="absolute w-full flex justify-end">
-            <div class="absolute -top-24 right-10 flex flex-col items-center">
+            <div class="absolute -top-16 right-10 flex flex-col items-center">
                 {% if user.is_authenticated %}
-                <p>Welcome, {{ user }}!</p>
-                <a href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date' %}" 
-                        class="underline text-blue-600">Home</a>
-                <a href="{% url 'home' 'tag1' 'date' %}" class="underline text-blue-600">See History</a>
-                <a href="{% url 'add_meal' %}" class="underline text-blue-600">Add a Meal</a>
-                <a href="{% url 'logout' %}" class="underline text-blue-600">Logout</a>
+                    <p>Welcome, {{ user.get_username }}!</p>
+                    <a href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date' %}" 
+                            class="underline text-blue-600">Home</a>
+                    <a href="{% url 'history' %}" class="underline text-blue-600">See History</a>
+                    <a href="{% url 'add_meal' %}" class="underline text-blue-600">Add a Meal</a>
+                    <a href="{% url 'logout' %}" class="underline text-blue-600">Logout</a>
                 {% else %}
-                <p>Welcome, Anonymous!</p>
-                <form method="POST" class="flex flex-col items-center">
-                    {% csrf_token %}
-                    <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username" name="username">
-                    <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password" name="password">
-                    <button type="submit" class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
-                </form>
-                <a href="{% url 'register' %}" class="underline text-blue-600">Register</a>
+                    <p>Welcome, Anonymous!</p>
+                    <form method="POST" class="flex flex-col items-center">
+                        {% csrf_token %}
+                        <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username" name="username">
+                        <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password" name="password">
+                        <button type="submit" class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
+                    </form>
+                    <a href="{% url 'register' %}" class="underline text-blue-600">Register</a>
                 {% endif %}
             </div>
         </div>
-        <nav class="mt-16 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
-            {% for tagName in tagList %}
-                {% if tagName in tags %}
-                    <a class="border border-blue-600 rounded p-2 bg-blue-600 text-white"
-                    href="/home/tags_{{ tags|replace:tagName }}/sort_date">{{ tagName }}</a>
-                {% else %}
-                    <a class="border border-blue-600 rounded p-2 text-blue-600"
-                    href="/home/tags_{{ tags|add:tagName }}/sort_date">{{ tagName }}</a>
-                {% endif %}
-            {% endfor %}
-
-            {% if user.is_authenticated %}
-            <button class="border border-green-600 rounded p-2 text-green-600">Recommended</button>
-            {% endif %}
-        </nav>
         
         {% block content %}{% endblock %}
     </div>

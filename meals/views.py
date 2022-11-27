@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Meal, MealRating, Tag
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm
+from .forms import SignUpForm, NewMealForm
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
@@ -89,5 +91,27 @@ def register(request):
         form = SignUpForm()
     return render(request, 'meals/register.html', context={'form': form})
 
-def addMeal(requst):
-    return render(request, 'meals/logout.html')
+@login_required(login_url='/register')
+def addMeal(request):
+    if request.method == 'POST':
+        form = NewMealForm(request.POST)
+        if form.is_valid():
+            mealName = form.cleaned_data['name']
+            mealUrl = form.cleaned_data['imgUrl']
+            mealOrigin = form.cleaned_data['countryOfOrigin']
+            mealDescription = form.cleaned_data['description']
+            meal = Meal(name=mealName, description=mealDescription ,imgUrl=mealUrl, countryOfOrigin=mealOrigin)
+            meal.save()
+            tags = form.cleaned_data['tags']
+            for tag in tags:
+                meal.tags.add(tag)
+            meal.save()
+
+        return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
+    else:
+        form = NewMealForm()
+    return render(request, 'meals/addMeal.html', context={'form': form})
+
+@login_required(login_url='/register')
+def history(request):
+    return render(request, 'meals/history.html')

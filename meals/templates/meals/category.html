@@ -1,5 +1,25 @@
 {% extends 'meals/header.html' %}
+{% load my_tags %}
 {% block content %}
+
+<p class="text-center mt-3">
+    Select one or more buttons to narrow down your<br> search and register to see recommendations
+</p>
+<nav class="mt-16 mx-auto w-4/5 header flex justify-around pb-2 border-b-4">
+    {% for tagName in tagList %}
+        {% if tagName in tags %}
+            <a class="border border-blue-600 rounded p-2 bg-blue-600 text-white"
+            href="/home/tags_{{ tags|replace:tagName }}/sort_date">{{ tagName }}</a>
+        {% else %}
+            <a class="border border-blue-600 rounded p-2 text-blue-600"
+            href="/home/tags_{{ tags|add:tagName }}/sort_date">{{ tagName }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+    <button class="border border-green-600 rounded p-2 text-green-600">Recommended</button>
+    {% endif %}
+</nav>
 
 <div class="flex justify-end mt-2">
     <div class="mr-28 text-center">
