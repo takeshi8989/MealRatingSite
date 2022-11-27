@@ -22,7 +22,7 @@
                 <a href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date' %}" 
                         class="underline text-blue-600">Home</a>
                 <a href="{% url 'home' 'tag1' 'date' %}" class="underline text-blue-600">See History</a>
-                <a href="{% url 'home' 'tag1' 'date' %}" class="underline text-blue-600">Add a Meal</a>
+                <a href="{% url 'add_meal' %}" class="underline text-blue-600">Add a Meal</a>
                 <a href="{% url 'logout' %}" class="underline text-blue-600">Logout</a>
                 {% else %}
                 <p>Welcome, Anonymous!</p>
@@ -32,7 +32,7 @@
                     <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password" name="password">
                     <button type="submit" class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
                 </form>
-                <a href="#" class="underline text-blue-600">Register</a>
+                <a href="{% url 'register' %}" class="underline text-blue-600">Register</a>
                 {% endif %}
             </div>
         </div>

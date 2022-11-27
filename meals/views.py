@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Meal, MealRating, Tag
 from django.contrib.auth import authenticate, login, logout
+from .forms import SignUpForm
+from django.shortcuts import redirect
 
 def home(request):
     morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
@@ -71,4 +73,21 @@ def detail(request, mealId):
 
 def log_out(request):
     logout(request)
+    return render(request, 'meals/logout.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
+    else:
+        form = SignUpForm()
+    return render(request, 'meals/register.html', context={'form': form})
+
+def addMeal(requst):
     return render(request, 'meals/logout.html')
