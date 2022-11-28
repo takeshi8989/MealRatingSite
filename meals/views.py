@@ -26,14 +26,15 @@ def category(request, tags, sortBy):
         if not selectedTags[i].__eq__('Recommended'):
             if selectedTags[i] in tagList:
                 mealList = mealList | Tag.objects.get(tagName=selectedTags[i]).meal_set.all()
-    if 'Recommended' in tags:
-        user = request.user
+    user = request.user
+    if 'Recommended' in tags and user.is_authenticated:
         favorite = user.ratings.filter(rating__gte=4).order_by('?').first()
-        theMeal = favorite.meal
-        similarUser = MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first().reviewer
-        recommend = similarUser.ratings.filter(rating__gte=4).exclude(meal=theMeal)
-        for re in recommend:
-            mealList = mealList | Meal.objects.filter(id=re.meal.id)
+        if favorite is not None:
+            theMeal = favorite.meal
+            similarUser = MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first().reviewer
+            recommend = similarUser.ratings.filter(rating__gte=4).exclude(meal=theMeal)
+            for re in recommend:
+                mealList = mealList | Meal.objects.filter(id=re.meal.id)
 
     mealList = mealList.distinct()
     if sortBy == 'date':
@@ -54,6 +55,7 @@ def category(request, tags, sortBy):
         user = authenticate(username=name, password=pw)
         if user:
             login(request,user)
+            return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     return render(request, 'meals/category.html', context=categoryCxt)
 
 
@@ -72,12 +74,14 @@ def detail(request, mealId):
         if user.is_authenticated:
             user.ratings.add(newRating)
             newRating.reviewer = user
+        return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     elif request.method == 'POST' and 'loginBtn' in request.POST:
         name = request.POST['username']
         pw = request.POST['password']
         user = authenticate(username=name, password=pw)
         if user:
             login(request,user)
+            return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     return render(request, 'meals/detail.html', context={'meal': meal})
 
 def log_out(request):

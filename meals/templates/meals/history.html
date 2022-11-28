@@ -3,7 +3,7 @@
 <p class="text-center text-md">Your Meals and Ratings</p>
 <div class="flex mt-5">
     <div class="w-1/2">
-        <p class="text-center">Your Ratings</p>
+        <p class="text-center">Your Meals</p>
         {% for meal in meals %}
             <a href="/detail_{{ meal.id }}">
                 <div class="flex items-center w-3/5 mx-auto my-5 border-2">
@@ -12,9 +12,12 @@
                 </div>
             </a>
         {% endfor %}
+        {% if not meals %}
+            <p class="text-center underline text-blue-600 mt-5 text-lg"><a href="{% url 'add_meal' %}">Add Your Favorite Meal</a></p>
+        {% endif %}
     </div>
     <div class="w-1/2">
-        <p class="text-center">Your Meals</p>
+        <p class="text-center">Your Ratings</p>
         {% for rating in ratings %}
             <a href="/detail_{{ rating.meal.id }}">
                 <div class="flex items-center w-3/5 mx-auto my-5 border-2">
@@ -23,6 +26,10 @@
                 </div>
             </a>
         {% endfor %}
+        {% if not ratings %}
+            <p class="text-center mt-5">You have no rating yet.</p>
+            <p class="text-center underline text-blue-600 mt-1 text-lg"><a href="{% url 'detail' 1 %}">Create Your First Rating</a></p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
