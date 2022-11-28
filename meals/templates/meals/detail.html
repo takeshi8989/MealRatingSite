@@ -7,23 +7,27 @@
 <div class="flex justify-center mt-3">
     <img src={{ meal.imgUrl }} alt="" width="20%">
 </div>
-<div class="w-1/3 mx-auto mt-3 flex justify-between">
-    <div>
-        <p>Country of Origin: </p>
-        <p>Description: </p>
-        <p>Avarage Score: </p>
-        <p>Votes: </p>
-    </div>
-    <div>
-        <p> {{ meal.countryOfOrigin }}</p>
+<div class="w-1/3 mx-auto mt-3 flex justify-around">
+    <table>
+        <tr>
+            <th class="font-normal">Country Of Origin: </th>
+            <th class="font-normal">{{ meal.countryOfOrigin }}</th>
+        </tr>
         {% if meal.description %}
-            <p> {{ meal.description }}</p>
-        {% else %}
-            <p>No description</p>
+            <tr>
+                <th class="font-normal">Description: </th>
+                <th class="font-normal">{{ meal.description }}</th>
+            </tr>
         {% endif %}
-        <p> {{ meal.avgRating|roundValue:2 }}</p>
-        <p> {{ meal.numOfVotes }}</p>
-    </div>
+        <tr>
+            <th class="font-normal">Average Score: </th>
+            <th class="font-normal">{{ meal.avgRating|roundValue:2 }}</th>
+        </tr>
+        <tr>
+            <th class="font-normal">Votes: </th>
+            <th class="font-normal">{{ meal.numOfVotes }}</th>
+        </tr>
+    </table>
 </div>
 <form method="POST">
     {% csrf_token %}
