@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Meal Recommender</title>
+</head>
+<body>
+    <h1 class="text-2xl text-center mt-10">Meal Recommender</h1>
+    {% if user.is_authenticated %}
+        <p class="text-center"><a class=" underline text-blue-600" 
+        href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date'%}">Home</a></p>
+    {% else %}
+    <p class="text-center mb-5">Login</p>
+    <div class="flex justify-center w-full mb-5">
+        <form method="POST" class="flex flex-col items-center">
+            {% csrf_token %}
+            <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="username" type="username" name="username">
+            <input class="border border-2 rounded border-gray-300 pl-2 m-1" placeholder="password" type="password" name="password">
+            <button name="loginBtn" type="submit" class="border border-sky-600 rounded text-sky-600 px-2 py-1 mt-1">Submit</button>
+        </form>
+    </div>
+    <p class="text-center">No Account? <a class="underline text-blue-600" href="{% url 'register' %}">Sign Up</a></p>
+    <p class="text-center mt-3">Use Meal Recommender without an Account 
+        <a class="underline text-blue-600" href="{% url 'home' '+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+' 'date'%}">
+            Home</a>
+    </p>
+    {% endif %}
+
+</body>
+</html>

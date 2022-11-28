@@ -7,27 +7,35 @@ from django.contrib.auth.decorators import login_required
 
 
 def home(request):
-    morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
-    afternoonMeals = Tag.objects.get(tagName='Afternoon').meal_set.all()[0:3]
-    eveningMeals = Tag.objects.get(tagName='Evening').meal_set.all()[0:3]
-    recentMeals = Meal.objects.all().order_by('-dateAdded')[0:3]
-    topRatedMeals = Meal.objects.all().order_by('-avgRating')[0:3]
-    ctx = {
-        'morning': morningMeals,
-        'afternoon': afternoonMeals,
-        'evening': eveningMeals,
-        'recent': recentMeals,
-        'topRated': topRatedMeals
-    }
     if request.method == 'POST':
-        mealName = request.POST['name']
-        mealUrl = request.POST['url']
-        mealOrigin = request.POST['origin']
-        mealTime = int(request.POST['time'])
-        mealDescription = request.POST['description']
-        meal = Meal(name=mealName, description=mealDescription ,imgUrl=mealUrl, countryOfOrigin=mealOrigin, typicalMealTime=mealTime)
-        meal.save()
-    return render(request, 'meals/index.html', context=ctx)
+        name = request.POST['username']
+        pw = request.POST['password']
+        user = authenticate(username=name, password=pw)
+        if user:
+            login(request,user)
+            return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
+    return render(request, 'meals/landing.html')
+    # morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
+    # afternoonMeals = Tag.objects.get(tagName='Afternoon').meal_set.all()[0:3]
+    # eveningMeals = Tag.objects.get(tagName='Evening').meal_set.all()[0:3]
+    # recentMeals = Meal.objects.all().order_by('-dateAdded')[0:3]
+    # topRatedMeals = Meal.objects.all().order_by('-avgRating')[0:3]
+    # ctx = {
+    #     'morning': morningMeals,
+    #     'afternoon': afternoonMeals,
+    #     'evening': eveningMeals,
+    #     'recent': recentMeals,
+    #     'topRated': topRatedMeals
+    # }
+    # if request.method == 'POST':
+    #     mealName = request.POST['name']
+    #     mealUrl = request.POST['url']
+    #     mealOrigin = request.POST['origin']
+    #     mealTime = int(request.POST['time'])
+    #     mealDescription = request.POST['description']
+    #     meal = Meal(name=mealName, description=mealDescription ,imgUrl=mealUrl, countryOfOrigin=mealOrigin, typicalMealTime=mealTime)
+    #     meal.save()
+    # return render(request, 'meals/index.html', context=ctx)
 
 
 def category(request, tags, sortBy):
@@ -64,7 +72,7 @@ def detail(request, mealId):
     meal = Meal.objects.filter(id=mealId).first()
     if meal is None:
         return render(request, 'meals/notfound.html')
-    if request.method == 'POST':
+    if request.method == 'POST' and 'ratingBtn' in request.POST:
         newRate = int(request.POST['rating'])
         newRating = MealRating(meal=meal, rating=newRate)
         meal.avgRating = (meal.avgRating * meal.numOfVotes + newRate) / (meal.numOfVotes + 1)
@@ -72,7 +80,14 @@ def detail(request, mealId):
         meal.save()
         newRating.save()
         user = request.user
-        user.ratings.add(newRating)
+        if user.is_authenticated:
+            user.ratings.add(newRating)
+    elif request.method == 'POST' and 'loginBtn' in request.POST:
+        name = request.POST['username']
+        pw = request.POST['password']
+        user = authenticate(username=name, password=pw)
+        if user:
+            login(request,user)
     return render(request, 'meals/detail.html', context={'meal': meal})
 
 def log_out(request):
@@ -85,7 +100,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
+            return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     else:
         form = SignUpForm()
     return render(request, 'meals/register.html', context={'form': form})
@@ -109,7 +124,7 @@ def addMeal(request):
             user = request.user
             user.meals.add(meal)
 
-        return redirect('home', tags='+Vegetarian+RecommendedSpicy+Healthy+Seafood+', sortBy='date')
+        return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     else:
         form = NewMealForm()
     return render(request, 'meals/addMeal.html', context={'form': form})
