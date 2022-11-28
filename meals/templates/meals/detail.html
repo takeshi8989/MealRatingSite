@@ -1,4 +1,5 @@
 {% extends 'meals/header.html' %}
+{% load my_tags %}
 {% block content %}
 <div class="text-center mt-5 text-2xl">
     <h1>{{ meal.name }}</h1>
@@ -15,8 +16,12 @@
     </div>
     <div>
         <p> {{ meal.countryOfOrigin }}</p>
-        <p> {{ meal.description }}</p>
-        <p> {{ meal.avgRating }}</p>
+        {% if meal.description %}
+            <p> {{ meal.description }}</p>
+        {% else %}
+            <p>No description</p>
+        {% endif %}
+        <p> {{ meal.avgRating|roundValue:2 }}</p>
         <p> {{ meal.numOfVotes }}</p>
     </div>
 </div>

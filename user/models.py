@@ -4,7 +4,7 @@ from meals.models import Meal, MealRating
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, username, email, password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -12,6 +12,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
         )
 
+        user.username = username
         user.set_password(password)
         user.save(using=self._db)
         return user

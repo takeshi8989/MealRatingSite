@@ -12,3 +12,8 @@ def replace(value, arg):
 @register.filter
 def add(value, arg):
     return value + arg + "+"
+
+@register.filter
+def roundValue(value, arg):
+    return  round(value, arg)
+
