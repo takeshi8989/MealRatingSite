@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Meal, MealRating, Tag
+from user.models import User
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm, NewMealForm
 from django.shortcuts import redirect
@@ -15,27 +16,6 @@ def home(request):
             login(request,user)
             return redirect('home', tags='+Vegetarian+Spicy+Healthy+Seafood+Morning+Afternoon+Evening+Recommended+', sortBy='date')
     return render(request, 'meals/landing.html')
-    # morningMeals = Tag.objects.get(tagName='Morning').meal_set.all()[0:3]
-    # afternoonMeals = Tag.objects.get(tagName='Afternoon').meal_set.all()[0:3]
-    # eveningMeals = Tag.objects.get(tagName='Evening').meal_set.all()[0:3]
-    # recentMeals = Meal.objects.all().order_by('-dateAdded')[0:3]
-    # topRatedMeals = Meal.objects.all().order_by('-avgRating')[0:3]
-    # ctx = {
-    #     'morning': morningMeals,
-    #     'afternoon': afternoonMeals,
-    #     'evening': eveningMeals,
-    #     'recent': recentMeals,
-    #     'topRated': topRatedMeals
-    # }
-    # if request.method == 'POST':
-    #     mealName = request.POST['name']
-    #     mealUrl = request.POST['url']
-    #     mealOrigin = request.POST['origin']
-    #     mealTime = int(request.POST['time'])
-    #     mealDescription = request.POST['description']
-    #     meal = Meal(name=mealName, description=mealDescription ,imgUrl=mealUrl, countryOfOrigin=mealOrigin, typicalMealTime=mealTime)
-    #     meal.save()
-    # return render(request, 'meals/index.html', context=ctx)
 
 
 def category(request, tags, sortBy):
@@ -46,6 +26,15 @@ def category(request, tags, sortBy):
         if not selectedTags[i].__eq__('Recommended'):
             if selectedTags[i] in tagList:
                 mealList = mealList | Tag.objects.get(tagName=selectedTags[i]).meal_set.all()
+    if 'Recommended' in tags:
+        user = request.user
+        favorite = user.ratings.filter(rating__gte=4).order_by('?').first()
+        theMeal = favorite.meal
+        similarUser = MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first().reviewer
+        recommend = similarUser.ratings.filter(rating__gte=4).exclude(meal=theMeal)
+        for re in recommend:
+            mealList = mealList | Meal.objects.filter(id=re.meal.id)
+
     mealList = mealList.distinct()
     if sortBy == 'date':
         mealList = mealList.order_by('-dateAdded')
@@ -82,6 +71,7 @@ def detail(request, mealId):
         user = request.user
         if user.is_authenticated:
             user.ratings.add(newRating)
+            newRating.reviewer = user
     elif request.method == 'POST' and 'loginBtn' in request.POST:
         name = request.POST['username']
         pw = request.POST['password']

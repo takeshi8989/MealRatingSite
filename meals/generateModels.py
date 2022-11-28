@@ -22,6 +22,7 @@ for i in range(2):
 # ...             if Meal.objects.filter(id=currentId).exists():
 # ...                     meal = Meal.objects.get(id=currentId)
 # ...                     rating = MealRating(meal=meal, rating=fake.random_int(1,5))
+#                         rating.reviewer = person
 # ...                     rating.save()
 # ...                     meal.avgRating = (meal.avgRating * meal.numOfVotes + rating.rating) / (meal.numOfVotes + 1)
 # ...                     meal.numOfVotes += 1

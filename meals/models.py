@@ -29,6 +29,7 @@ class Meal(models.Model):
 class MealRating(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     rating = models.FloatField()
+    reviewer =models.ForeignKey('user.User', on_delete=models.CASCADE, blank=True, null=True)
     dateOfRating = models.DateField(default=datetime.date.today)
 
     class Meta:

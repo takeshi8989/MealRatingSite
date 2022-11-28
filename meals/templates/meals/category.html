@@ -17,7 +17,13 @@
     {% endfor %}
 
     {% if user.is_authenticated %}
-    <button class="border border-green-600 rounded p-2 text-green-600">Recommended</button>
+        {% if 'Recommended' in tags %}
+            <a class="border border-green-600 rounded p-2 bg-green-600 text-white"
+            href="/home/tags_{{ tags|replace:'Recommended' }}/sort_date">Recommended</a>
+        {% else %}
+            <a class="border border-green-600 rounded p-2 text-green-600"
+            href="/home/tags_{{ tags|add:'Recommended' }}/sort_date">Recommended</a>
+        {% endif %}
     {% endif %}
 </nav>
 
