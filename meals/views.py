@@ -31,11 +31,11 @@ def category(request, tags, sortBy):
         favorite = user.ratings.filter(rating__gte=4).order_by('?').first()
         if favorite is not None:
             theMeal = favorite.meal
-            similarUser = MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first().reviewer
-            recommend = similarUser.ratings.filter(rating__gte=4).exclude(meal=theMeal)
-            for re in recommend:
-                mealList = mealList | Meal.objects.filter(id=re.meal.id)
-
+            if MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first() is not None:
+                similarUser = MealRating.objects.filter(meal=favorite.meal).filter(reviewer__isnull=False).exclude(reviewer=user).order_by('?').first().reviewer
+                recommend = similarUser.ratings.filter(rating__gte=4).exclude(meal=theMeal)
+                for re in recommend:
+                    mealList = mealList | Meal.objects.filter(id=re.meal.id)
     mealList = mealList.distinct()
     if sortBy == 'date':
         mealList = mealList.order_by('-dateAdded')

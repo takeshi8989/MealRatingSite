@@ -16,19 +16,21 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_staffuser(self, email, password):
+    def create_staffuser(self, username, email, password):
         user = self.create_user(
+            username,
             email,
-            password=password,
+            password,
         )
         user.staff = True
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, username, email, password):
         user = self.create_user(
+            username,
             email,
-            password=password,
+            password
         )
         user.staff = True
         user.admin = True
@@ -53,6 +55,7 @@ class User(AbstractBaseUser):
     admin = models.BooleanField(default=False)
     objects = UserManager()
     USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
     def __str__(self):             
         return self.username
